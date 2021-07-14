@@ -6,11 +6,12 @@ const getWorkouts = (req, res) => {};
 
 const updateWorkout = (req, res) => {};
 
-const createWorkout = (req, res) => {
+const createWorkout = async (req, res) => {
   try {
-    const Workout = await workout.create({});
-    return res.json(Workout);
+    const workout = await Workout.create({});
+    return res.json(workout);
   } catch (error) {
+    console.log(error.message);
     return res.status(500).json({ error: "failed to create workout" });
   }
 };
