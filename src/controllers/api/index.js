@@ -41,7 +41,19 @@ const createWorkout = async (req, res) => {
   }
 };
 
-const getAggregatedWorkout = (req, res) => {};
+const getAggregatedWorkout = async (req, res) => {
+  try {
+    const lastWorkout = await Workout.aggregate([
+      { $addFields: { totalDuration: { $sum: "$exercises.duration" } } },
+    ])
+      .sort({ _id: -1 })
+      .limit(7);
+    return res.json(lastWorkout);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ error: "failed to get last workout" });
+  }
+};
 
 module.exports = {
   getWorkouts,
