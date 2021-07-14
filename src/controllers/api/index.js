@@ -2,7 +2,17 @@ const { model } = require("mongoose");
 
 const { Workout } = require("../../models");
 
-const getWorkouts = (req, res) => {};
+const getWorkouts = async (req, res) => {
+  try {
+    const lastWorkout = await Workout.aggregate([
+      { $addFields: { totalDuration: { $sum: "$exercises.duration" } } },
+    ]);
+    return res.json(lastWorkout);
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({ error: "failed to get last workout" });
+  }
+};
 
 const updateWorkout = async (req, res) => {
   try {
